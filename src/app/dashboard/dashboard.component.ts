@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HopkinsDataService } from '../domain/hopkins-data.service';
+import { CaseNumbers } from '../domain/caseNumbers';
+import { Observable, from } from 'rxjs';
+import * as moment from 'moment';
+import { groupBy } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +12,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  public CaseNumbers: Observable<Array<CaseNumbers>>;
+
+  constructor(private hopkinsService: HopkinsDataService) { }
 
   ngOnInit(): void {
+
+    this.CaseNumbers = this.hopkinsService.getByDay(moment().subtract(1, 'day'));
+    this.CaseNumbers.subscribe(x => console.log(x.length));
+
   }
 
 }

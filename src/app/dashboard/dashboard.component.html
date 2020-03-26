@@ -1,2 +1,9 @@
 <p>dashboard works!</p>
-<ngb-datepicker #d></ngb-datepicker>
+<ngb-datepicker></ngb-datepicker>
+
+<ul>
+    <li *ngFor="let case of this.CaseNumbers|async">
+        {{case.Infected}}
+        {{case.Country}}
+    </li>
+</ul>
