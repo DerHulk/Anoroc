@@ -2,7 +2,7 @@
 <ngb-datepicker></ngb-datepicker>
 
 <ul>
-    <li *ngFor="let case of this.CaseNumbers|async">
+    <li *ngFor="let case of this.CaseNumbers">
         {{case.Infected}}
         {{case.Country}}
     </li>
