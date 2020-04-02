@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CaseNumbers } from '../domain/caseNumbers';
 
 @Pipe({
-    name: 'countryFilter'
+    name: 'countryFilter',
+    pure: false
 })
 export class CountryFilterPipe implements PipeTransform {
     public transform(value: Array<CaseNumbers>, filter: string) {
