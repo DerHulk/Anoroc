@@ -4,18 +4,11 @@
 <ngb-datepicker  (dateSelect)="dateBChanged($event)"></ngb-datepicker>
 
 <input type="text" [(ngModel)]="countryFilter" />
-<h1>A</h1>
+<h1>A-B</h1>
 <ul>
-    <li *ngFor="let case of this.caseNumbersA|countryFilter:countryFilter">
-        {{case.Infected}}
-        {{case.Country}}
-    </li>
-</ul>
-
-<h1>B</h1>
-<ul>
-    <li *ngFor="let case of this.caseNumbersB|countryFilter:countryFilter">
-        {{case.Infected}}
-        {{case.Country}}
+    <li *ngFor="let case of this.aggregate|countryFilter:countryFilter">
+        A:{{case.a.Infected}} 
+        B:{{case.b.Infected}}
+        {{case.country}}
     </li>
 </ul>

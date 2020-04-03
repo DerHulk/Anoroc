@@ -20,7 +20,6 @@ export class HopkinsDataService {
     const url =
       `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/${dateFormat}.csv`;
 
-
     return this.http.get<string>(url, httpOptions).pipe(map(x => this.FromCsvLines(x.split('\n'))));
   }
 

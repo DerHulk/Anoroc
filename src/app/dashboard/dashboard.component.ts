@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HopkinsDataService } from '../domain/hopkins-data.service';
 import { CaseNumbers } from '../domain/caseNumbers';
-import { Observable, from, of, zip, concat } from 'rxjs';
+import { Observable, from, of, zip, concat, merge } from 'rxjs';
 import * as moment from 'moment';
 import { groupBy, mergeAll, scan, flatMap, single, first, mergeMap, map, toArray, filter } from 'rxjs/operators';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { CaseAggregate } from '../domain/caseAggregate';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,9 +14,9 @@ import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DashboardComponent implements OnInit {
 
-  public caseNumbersA: Array<CaseNumbers>;
-  public caseNumbersB: Array<CaseNumbers>;
-
+  public dateA: moment.Moment;
+  public dateB: moment.Moment;
+  public aggregate: Array<CaseAggregate>;
   public countryFilter: string;
 
   constructor(private calendar: NgbCalendar,
@@ -24,53 +25,63 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.countryFilter = 'Germany,US,China,United Kingdom,France';
-    this.addCaseNumbers('A', moment().subtract(1, 'day'));
-    this.addCaseNumbers('B', moment().subtract(2, 'day'));
+    this.aggregate = [];
+    this.addCaseNumbers(moment().subtract(1, 'day'), moment().subtract(2, 'day'));
   }
 
   public dateAChanged(selectedDate: NgbDateStruct) {
-    const targetDate = this.toMoment(selectedDate);
-    this.addCaseNumbers('A', targetDate);
+    this.dateA = this.toMoment(selectedDate);
+    this.addCaseNumbers(this.dateA, this.dateB);
   }
 
   public dateBChanged(selectedDate: NgbDateStruct) {
-    const targetDate = this.toMoment(selectedDate);
-    this.addCaseNumbers('B', targetDate);
+    this.dateB = this.toMoment(selectedDate);
+    this.addCaseNumbers(this.dateA, this.dateB);
   }
 
   private toMoment(ngDate: NgbDateStruct): moment.Moment {
     return moment(ngDate.day + '.' + ngDate.month + '.' + ngDate.year, 'DD.MM.YYYY');
   }
 
-  private addCaseNumbers(target: 'A' | 'B', targetDate: moment.Moment) {
+  private addCaseNumbers(targetDateA: moment.Moment, targetDateB: moment.Moment) {
 
-    if (target === 'A') {
-      this.caseNumbersA = [];
-    }
-    else {
-      this.caseNumbersB = [];
-    }
+    const queryA = this.hopkinsService.getByDay(targetDateA).pipe(map(x => { x.forEach(y => y.Date = targetDateA); return x; }));
+    const queryB = this.hopkinsService.getByDay(targetDateB).pipe(map(x => { x.forEach(y => y.Date = targetDateB); return x; }));
 
-
-    this.hopkinsService.getByDay(targetDate).pipe(mergeAll(), groupBy(x => x.Country))
+    merge(queryA, queryB).pipe(mergeAll(), groupBy(x => x.Country))
       .subscribe(group => {
 
-        const aggregate = new CaseNumbers();
+        const caseA = new CaseNumbers();
+        const caseB = new CaseNumbers();
+        const aggregate = new CaseAggregate();
+
+        aggregate.a = caseA;
+        aggregate.b = caseB;
+
         group.forEach(x => {
-          aggregate.Infected += x.Infected;
-          if (!aggregate.Date) {
-            aggregate.Date = x.Date;
+
+          aggregate.country = group.key;
+
+          if (!caseA.Date) {
+            caseA.Date = x.Date;
+            caseA.Infected = 0;
+            caseA.Country = group.key;
+          }
+          else if (caseA.Date === x.Date) {
+            caseA.Infected += x.Infected;
+          }
+          else if (!caseB.Date) {
+            caseB.Date = x.Date;
+            caseB.Infected = 0;
+            caseB.Country = group.key;
+          }
+          else if (caseB.Date === x.Date) {
+            caseB.Infected += x.Infected;
           }
         });
-        aggregate.Infected = 0;
-        aggregate.Country = group.key;
+        
+        this.aggregate.push(aggregate);
 
-        if (target === 'A') {
-          this.caseNumbersA.push(aggregate);
-        }
-        else {
-          this.caseNumbersB.push(aggregate);
-        }
       });
   }
 }
