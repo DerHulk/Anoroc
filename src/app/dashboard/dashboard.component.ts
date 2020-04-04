@@ -59,12 +59,12 @@ export class DashboardComponent implements OnInit {
         aggregate.b = caseB;
 
         group.forEach(x => {
-
+         
           aggregate.country = group.key;
 
           if (!caseA.Date) {
             caseA.Date = x.Date;
-            caseA.Infected = 0;
+            caseA.Infected = x.Infected;
             caseA.Country = group.key;
           }
           else if (caseA.Date === x.Date) {
@@ -72,14 +72,24 @@ export class DashboardComponent implements OnInit {
           }
           else if (!caseB.Date) {
             caseB.Date = x.Date;
-            caseB.Infected = 0;
+            caseB.Infected = x.Infected;
             caseB.Country = group.key;
           }
           else if (caseB.Date === x.Date) {
             caseB.Infected += x.Infected;
           }
+
+          if (caseA.Date > caseB.Date) {
+            aggregate.diffInNumbers = caseA.Infected - caseB.Infected;
+            aggregate.increaseInPercent = Math.round((caseA.Infected - caseB.Infected) / (caseB.Infected / 100));
+          }
+          else {
+            aggregate.diffInNumbers = caseB.Infected - caseA.Infected;
+            aggregate.increaseInPercent = Math.round((caseB.Infected - caseA.Infected) / (caseA.Infected / 100));
+          }
+
         });
-        
+
         this.aggregate.push(aggregate);
 
       });
