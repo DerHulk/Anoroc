@@ -4,7 +4,7 @@ import { CaseNumbers } from '../domain/caseNumbers';
 import { Observable, from, of, zip, concat, merge } from 'rxjs';
 import * as moment from 'moment';
 import { groupBy, mergeAll, scan, flatMap, single, first, mergeMap, map, toArray, filter } from 'rxjs/operators';
-import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { CaseAggregate } from '../domain/caseAggregate';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,8 +16,8 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 export class DashboardComponent implements OnInit {
 
   public faCalendar = faCalendar;
-  public dateA: moment.Moment;
-  public dateB: moment.Moment;
+  public dateA: NgbDateStruct;
+  public dateB: NgbDateStruct;
   public aggregate: Array<CaseAggregate>;
   public countryFilter: string;
 
@@ -28,17 +28,20 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.countryFilter = 'Germany,US,China,United Kingdom,France';
     this.aggregate = [];
-    this.addCaseNumbers(moment().subtract(1, 'day'), moment().subtract(2, 'day'));
+
+    const a = moment().subtract(1, 'day');
+    const b = moment().subtract(2, 'day');
+
+    this.dateA = new NgbDate(a.year(), a.month() + 1, Number.parseInt(a.format('DD'), 0));
+    this.dateB = new NgbDate(b.year(), b.month() + 1, Number.parseInt(b.format('DD'), 0));
+
+    this.dateChanged();
   }
 
-  public dateAChanged(selectedDate: NgbDateStruct) {
-    this.dateA = this.toMoment(selectedDate);
-    this.addCaseNumbers(this.dateA, this.dateB);
-  }
-
-  public dateBChanged(selectedDate: NgbDateStruct) {
-    this.dateB = this.toMoment(selectedDate);
-    this.addCaseNumbers(this.dateA, this.dateB);
+  public dateChanged() {
+    const mA = this.toMoment(this.dateA);
+    const mB = this.toMoment(this.dateB);
+    this.addCaseNumbers(mA, mB);
   }
 
   private toMoment(ngDate: NgbDateStruct): moment.Moment {
