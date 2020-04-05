@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { groupBy, mergeAll, scan, flatMap, single, first, mergeMap, map, toArray, filter } from 'rxjs/operators';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { CaseAggregate } from '../domain/caseAggregate';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ import { CaseAggregate } from '../domain/caseAggregate';
 })
 export class DashboardComponent implements OnInit {
 
+  public faCalendar = faCalendar;
   public dateA: moment.Moment;
   public dateB: moment.Moment;
   public aggregate: Array<CaseAggregate>;
@@ -59,7 +61,7 @@ export class DashboardComponent implements OnInit {
         aggregate.b = caseB;
 
         group.forEach(x => {
-         
+
           aggregate.country = group.key;
 
           if (!caseA.Date) {

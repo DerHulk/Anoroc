@@ -1,21 +1,36 @@
-<p>dashboard works!</p>
-
-<ngb-datepicker (dateSelect)="dateAChanged($event)"></ngb-datepicker>
-<ngb-datepicker (dateSelect)="dateBChanged($event)"></ngb-datepicker>
-
-<input type="text" [(ngModel)]="countryFilter" />
 <h1>A-B</h1>
 
 <div class="container">
   <div class="row">
     <div class="col-sm">
       Country
+      <input type="text" [(ngModel)]="countryFilter" />
     </div>
     <div class="col-sm">
-      A
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="dpA" ngbDatepicker #datePickerA="ngbDatepicker"
+            (dateSelect)="dateAChanged($event)">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="datePickerA.toggle()" type="button">
+              <fa-icon [icon]="faCalendar"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-sm">
-      B
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="dpB" ngbDatepicker #datePickerB="ngbDatepicker"
+            (dateSelect)="dateBChanged($event)">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="datePickerB.toggle()" type="button">
+              <fa-icon [icon]="faCalendar"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-sm">
       Diff
