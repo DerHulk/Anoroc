@@ -1,15 +1,17 @@
-<h1>A-B</h1>
-
 <div class="container">
   <div class="row">
     <div class="col-sm">
       Country
-      <input type="text" [(ngModel)]="countryFilter" />
+      <button type="button" class="btn btn-outline-secondary mr-2" placement="bottom" [ngbPopover]="popCountryFilter"
+        popoverTitle="Filter the countries">
+        <fa-icon [icon]="faGloble"></fa-icon>
+      </button>
     </div>
     <div class="col-sm">
       <div class="form-group">
         <div class="input-group">
-          <input class="form-control" placeholder="yyyy-mm-dd" name="dpA" ngbDatepicker #datePickerA="ngbDatepicker" (dateSelect)="dateChanged()" [(ngModel)]="dateA" >
+          <input class="form-control" placeholder="yyyy-mm-dd" name="dpA" ngbDatepicker #datePickerA="ngbDatepicker"
+            (dateSelect)="dateChanged()" [(ngModel)]="dateA">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary calendar" (click)="datePickerA.toggle()" type="button">
               <fa-icon [icon]="faCalendar"></fa-icon>
@@ -21,7 +23,8 @@
     <div class="col-sm">
       <div class="form-group">
         <div class="input-group">
-          <input class="form-control" placeholder="yyyy-mm-dd" name="dpB" ngbDatepicker #datePickerB="ngbDatepicker" (dateSelect)="dateChanged()" [(ngModel)]="dateB" >
+          <input class="form-control" placeholder="yyyy-mm-dd" name="dpB" ngbDatepicker #datePickerB="ngbDatepicker"
+            (dateSelect)="dateChanged()" [(ngModel)]="dateB">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary calendar" (click)="datePickerB.toggle()" type="button">
               <fa-icon [icon]="faCalendar"></fa-icon>
@@ -55,5 +58,15 @@
       {{case.increaseInPercent}}%
     </div>
   </div>
+
+
+  <ng-template #popCountryFilter>
+    <ol>
+      <li *ngFor="let country of countries">
+        {{country}}
+        <input type="checkbox" [checked]="isFiltered(country)" (click)="toogleCountryFilter(country)">
+      </li>
+    </ol>
+  </ng-template>
 
 </div>

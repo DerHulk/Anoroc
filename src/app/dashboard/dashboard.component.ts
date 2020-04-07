@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { groupBy, mergeAll, scan, flatMap, single, first, mergeMap, map, toArray, filter } from 'rxjs/operators';
 import { NgbCalendar, NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { CaseAggregate } from '../domain/caseAggregate';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,17 +16,20 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 export class DashboardComponent implements OnInit {
 
   public faCalendar = faCalendar;
+  public faGloble = faGlobe;
   public dateA: NgbDateStruct;
   public dateB: NgbDateStruct;
   public aggregate: Array<CaseAggregate>;
   public countryFilter: string;
+  public countries: Array<string>;
 
   constructor(private calendar: NgbCalendar,
     private hopkinsService: HopkinsDataService) {
   }
 
   ngOnInit(): void {
-    this.countryFilter = 'Germany,US,China,United Kingdom,France';
+    this.countries = this.hopkinsService.getCountrys();
+    this.countryFilter = 'Germany,US,China,United Kingdom,France,';
     this.aggregate = [];
 
     const a = moment().subtract(1, 'day');
@@ -98,5 +101,27 @@ export class DashboardComponent implements OnInit {
         this.aggregate.push(aggregate);
 
       });
+  }
+
+  public toogleCountryFilter(country: string) {
+
+    const filtered = this.isFiltered(country);
+    country = country + ',';
+
+    if (filtered) {
+      this.countryFilter = this.countryFilter.replace(country, '');
+    }
+    else {
+      if (this.countryFilter.endsWith(',')) {
+        this.countryFilter = this.countryFilter.concat(country);
+      }
+      else {
+        this.countryFilter = country;
+      }
+    }
+  }
+
+  public isFiltered(country: string) {
+    return this.countryFilter.includes(country);
   }
 }
