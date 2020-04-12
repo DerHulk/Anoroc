@@ -1,11 +1,19 @@
 <div class="container">
   <div class="row">
     <div class="col-sm">
-      Country
-      <button type="button" class="btn btn-outline-secondary mr-2" placement="bottom" [ngbPopover]="popCountryFilter"
-        popoverTitle="Filter the countries">
-        <fa-icon [icon]="faGloble"></fa-icon>
-      </button>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text transparent" id="btnGroupAddon">
+              Country
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-secondary form-control" placement="bottom"
+            [ngbPopover]="popCountryFilter" popoverTitle="Filter the countries">
+            <fa-icon [icon]="faGloble"></fa-icon>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="col-sm">
       <div class="form-group">
@@ -62,9 +70,13 @@
 
   <ng-template #popCountryFilter>
     <ol>
-      <li *ngFor="let country of countries">
-        {{country}}
-        <input type="checkbox" [checked]="isFiltered(country)" (click)="toogleCountryFilter(country)">
+      <li *ngFor="let country of countries" class="row">
+        <div class="col-sm">
+          {{country}}
+        </div>
+        <div class="col-sm">
+          <input type="checkbox" [checked]="isFiltered(country)" (click)="toogleCountryFilter(country)">
+        </div>
       </li>
     </ol>
   </ng-template>
