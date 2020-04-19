@@ -10,13 +10,15 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CountryFilterPipe } from './dashboard/countryFilterPipe';
 import { FormsModule } from '@angular/forms';
+import { StringFilterPipe } from './dashboard/stringFilterPipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    CountryFilterPipe
+    CountryFilterPipe,
+    StringFilterPipe,
   ],
   imports: [
     BrowserModule,

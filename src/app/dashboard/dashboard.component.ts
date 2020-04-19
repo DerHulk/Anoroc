@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   public dateB: NgbDateStruct;
   public aggregate: Array<CaseAggregate>;
   public countryFilter: string;
+  public countrySearch: string;
   public countries: Array<string>;
 
   constructor(private calendar: NgbCalendar,
